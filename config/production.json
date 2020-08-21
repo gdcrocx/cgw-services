@@ -1,0 +1,16 @@
+//PRODUCTION CONFIGURATION
+{	
+    "service": {
+        "url": "192.168.2.41",
+        "port": "3000"
+    },
+    "db": {
+        "connectionLimit"     : "100", //important
+        "host"                : "3.20.89.105",
+        "user"                : "tm_db_user",
+        "password"            : "tm_db_pass",
+        "database"            : "tm_cgw_db",
+        "debug"               : false,
+        "multipleStatements"  : true
+    }
+}

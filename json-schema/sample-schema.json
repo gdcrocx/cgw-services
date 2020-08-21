@@ -1,0 +1,37 @@
+{ 
+    "teamUuid": "cgw-uuid1234",
+    "teamId": "Team 1",
+    "startTime": "2020-08-20T19:30:33-04:00",
+    "totalTime": "1h30m",
+    "currentTime": "2020-08-20T21:00:33-04:00",
+    "quizType": "aws",
+    "questions": [
+        {
+            "id": 1,
+            "difficulty": "easy",
+            "riskLevel": "low",
+            "allottedTime": "5m",
+            "startTime": "2020-08-20T20:00:33-04:00",
+            "currentTime": "2020-08-20T20:02:33-04:00",
+            "endTime": "2020-08-20T20:05:33-04:00"
+        },
+        {
+            "id": 2,
+            "difficulty": "medium",
+            "riskLevel": "medium",
+            "allottedTime": "15m",
+            "startTime": "2020-08-20T19:33:33-04:00",
+            "currentTime": "2020-08-20T19:41:33-04:00",
+            "endTime": "2020-08-20T19:48:33-04:00"
+        },
+        {
+            "id": 3,
+            "difficulty": "hard",
+            "riskLevel": "high",
+            "allottedTime": "30m",
+            "startTime": "2020-08-20T19:42:33-04:00",
+            "currentTime": "2020-08-20T20:12:33-04:00",
+            "endTime": "2020-08-20T20:12:33-04:00"
+        }
+    ]
+}
