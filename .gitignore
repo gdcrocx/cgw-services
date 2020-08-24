@@ -2,3 +2,5 @@
 node_modules
 .vscode
 log/**
+
+trend_app_protect.json
