@@ -9,10 +9,21 @@ var conf = convict({
 		default: 'production',
 		env: 'NODE_ENV'
 	},
+	service: {
+        url: {
+			doc: 'Service Host IP Address',
+			default: '3.20.89.105'
+		},
+		port: 
+		{
+			doc: 'Service Host Port',
+			default: '8080'
+		}
+    },
 	db: {
 		host: {
 			doc: 'DB Host IP Address',
-			default: '3.20.89.105'
+			default: '127.0.0.1'
 		},
 		user: {
 			doc: 'DB User',
