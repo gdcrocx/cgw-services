@@ -46,6 +46,9 @@ var router = express.Router();
 
 router.use('/login', routes.login);
 router.use('/users', routes.users);
+router.use('/aws', routes.aws);
+router.use('/az', routes.az);
+router.use('/question', routes.question);
 
 app.use(router);
 
