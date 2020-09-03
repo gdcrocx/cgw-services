@@ -1,5 +1,9 @@
 var pool = require('./_mysql-client');
 
+exports.getAzStatus = function(req, res) {  
+    return res(null, "Howdy Azure!");
+};
+
 exports.getLoginVerified = function (req, res) {
     console.log("Data : " + req.params.user_id + " " + req.params.user_pass);
     //console.log("Data : " + JSON.stringify(req)); 

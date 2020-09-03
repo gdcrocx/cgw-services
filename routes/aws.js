@@ -1,7 +1,9 @@
 var router = require('express').Router(),
     service = require('../services/aws');
 
-router.post('/instance/:instanceId', service.checkInstanceId);
+router.get('/health', service.getAwsStatus);
+
+router.post('/instance', service.checkInstanceId);
 
 router.post('/publicIp/:publicIp', service.checkPublicIp);
 
