@@ -11,6 +11,8 @@ router.delete('/:userid/:uid/:upass', service.deleteUserDetails);
 
 router.put('/:userid/:username/:phoneno/:firstname/:lastname/:email/:userpass/:usertype', service.updateUserDetails);
 
-router.get('/type/:usertype', service.getUserDetailsByUserType);
+// router.get('/type/:usertype', service.getUserDetailsByUserType);
+
+router.post('/login', service.verifyUser);
 
 module.exports = router;

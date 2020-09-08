@@ -157,15 +157,15 @@ exports.updateUserDetails = function (req, res) {
     }
 };
 
-exports.getUserDetailsByUserType = function (req, res) {
+exports.verifyUser = function (req, res) {
     console.log("\nUser Service Contacted...");  
     try {
-        if(typeof req.params.usertype == 'undefined') {
+        if(typeof req.body.user_team_uuid == 'undefined' || typeof req.body.user_pass == 'undefined') {
             return res.status(400).end();
         }   
-        console.log("Service Request User Type : " + req.params.usertype);
+        console.log("Service Request User Id : " + req.params.user_team_uuid);
 
-        usersRepo.getUserDetailsByUserType(req, function (err, result) {            
+        usersRepo.verifyUser(req, function (err, result) {            
             if(err) {
                 console.log("Error: 500, returned " + err);
                 return res.status(500).end();                
@@ -188,3 +188,35 @@ exports.getUserDetailsByUserType = function (req, res) {
         console.log("users Over and out..");
     }
 };
+
+// exports.getUserDetailsByUserType = function (req, res) {
+//     console.log("\nUser Service Contacted...");  
+//     try {
+//         if(typeof req.params.usertype == 'undefined') {
+//             return res.status(400).end();
+//         }   
+//         console.log("Service Request User Type : " + req.params.usertype);
+
+//         usersRepo.getUserDetailsByUserType(req, function (err, result) {            
+//             if(err) {
+//                 console.log("Error: 500, returned " + err);
+//                 return res.status(500).end();                
+//             }
+//             if(!result) {
+//                 console.log("Error: 404, returned " + result);
+//                 return res.status(404).end();
+//             }
+//             if(result) {
+//                 console.log("Status: Success | Status Code: 200 | " + result);
+//                 return res.status(200).set('Content-Type', 'application/json').send(result).end();
+//             }
+//         });
+//     }
+//     catch(err) {
+//         console.log("Error 500 - Caught an exception - " + err);
+//         return res.status(500).end();
+//     }
+//     finally {    
+//         console.log("users Over and out..");
+//     }
+// };

@@ -89,9 +89,9 @@ exports.addUserDetails = function(req, res) {
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log("CALL spAddUserDetails(" + connection.escape(req.params.username) + "," + connection.escape(req.params.phoneno) + "," + connection.escape(req.params.firstname) + "," + connection.escape(req.params.lastname) + "," + connection.escape(req.params.email) + "," + connection.escape(req.params.userpass) + "," + connection.escape(req.params.usertype) + ");");
+        console.log("CALL spAddUserDetails(" + connection.escape(req.params.user_name) + "," + connection.escape(req.params.user_pass) + "," + connection.escape(req.params.user_team_uuid));
 
-        connection.query("CALL spAddUserDetails(" + connection.escape(req.params.username) + "," + connection.escape(req.params.phoneno) + "," + connection.escape(req.params.firstname) + "," + connection.escape(req.params.lastname) + "," + connection.escape(req.params.email) + "," + connection.escape(req.params.userpass) + "," + connection.escape(req.params.usertype) + ");", function(err, rows){          
+        connection.query("CALL spAddUserDetails(" + connection.escape(req.params.user_name) + "," + connection.escape(req.params.user_pass) + "," + connection.escape(req.params.user_team_uuid), function(err, rows){          
             connection.release();            
             if(!err) {                                
                 var response = JSON.stringify(rows[0]); 
@@ -166,32 +166,71 @@ exports.updateUserDetails = function(req, res) {
     });
 };
 
-exports.getUserDetailsByUserType = function(req, res) {
-
-    console.log("Data Request Id: " + req);
+exports.verifyUser = function(req,res) {
 
     pool.getConnection(function(err, connection){
         if (err) {
             //connection.release();
-            res.json({"code" : 503, "status" : "Error connecting to database.. :("});
-            return;
-        }   
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log("CALL spGetUserDetailsByUserType(" + connection.escape(req.params.usertype) + ");");
-
-        connection.query("CALL spGetUserDetailsByUserType(" + connection.escape(req.params.usertype) + ");", function(err, rows){          
+        connection.query("CALL spVerifyUser(" + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + ");", function(err, rows){          
             connection.release();            
             if(!err) {                                
                 var response = JSON.stringify(rows[0]); 
+                //console.log("Response res - " + response);
                 return res(null, response); 
             }           
         });
 
+        /*connection.query("CALL spGetAllUserDetails();", function(err, fields, rows){          
+            connection.release();            
+            if(!err) {                                
+                var response = JSON.stringify(fields) + JSON.stringify(rows[0]); 
+                console.log("Response res - " + " F: " + fields + " R: " + response);
+                //return res(null, response);
+                return response; 
+            } 
+        });*/ 
+
         connection.on('error', function(err) {      
-                res.json({"code" : 503, "status" : "Error connecting to database.. :("});
-                return;     
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
         });
     });
-};
+}
+
+// exports.getUserDetailsByUserType = function(req, res) {
+
+//     console.log("Data Request Id: " + req);
+
+//     pool.getConnection(function(err, connection){
+//         if (err) {
+//             //connection.release();
+//             res.json({"code" : 503, "status" : "Error connecting to database.. :("});
+//             return;
+//         }   
+
+//         console.log('Connected as Thread Id: ' + connection.threadId);
+
+//         console.log("CALL spGetUserDetailsByUserType(" + connection.escape(req.params.usertype) + ");");
+
+//         connection.query("CALL spGetUserDetailsByUserType(" + connection.escape(req.params.usertype) + ");", function(err, rows){          
+//             connection.release();            
+//             if(!err) {                                
+//                 var response = JSON.stringify(rows[0]); 
+//                 return res(null, response); 
+//             }           
+//         });
+
+//         connection.on('error', function(err) {      
+//                 res.json({"code" : 503, "status" : "Error connecting to database.. :("});
+//                 return;     
+//         });
+//     });
+// };
