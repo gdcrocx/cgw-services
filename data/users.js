@@ -89,9 +89,9 @@ exports.addUserDetails = function(req, res) {
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_pass) + "," + connection.escape(req.body.user_team_uuid) + ")");
+        console.log("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + ")");
 
-        connection.query("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_pass) + "," + connection.escape(req.body.user_team_uuid) + ")", function(err, rows){          
+        connection.query("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + ")", function(err, rows){          
             connection.release();            
             if(!err) {                                
                 var response = JSON.stringify(rows[0]); 
