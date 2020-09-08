@@ -64,10 +64,10 @@ exports.getUserDetailsById = function (req, res) {
 exports.addUserDetails = function (req, res) {
     console.log("\nUser Service Contacted...");  
     try {
-        if(typeof req.params.username == 'undefined' || typeof req.params.phoneno == 'undefined' || typeof req.params.firstname == 'undefined' || typeof req.params.lastname == 'undefined' || typeof req.params.email == 'undefined' || typeof req.params.userpass == 'undefined' || typeof req.params.usertype == 'undefined') {
+        if(typeof req.body.user_name == 'undefined' || typeof req.body.user_pass == 'undefined' || typeof req.body.user_team_uuid == 'undefined') {
             return res.status(400).end();
         }   
-        console.log("Service Request Username : " + req.params.username + " Phone# : " + req.params.phoneno + " Firstname : " + req.params.firstname + " Lastname : " + req.params.lastname + " Email Id : " + req.params.email + " User Type : " + req.params.usertype);
+        console.log("Service Request Username : " + req.body.user_name + " User Team UUID# : " + req.body.user_team_uuid);
 
         usersRepo.addUserDetails(req, function (err, result) {            
             if(err) {
