@@ -11,4 +11,8 @@ router.put('/unlock', service.unlockQuestion);
 
 router.post('/next', service.nextQuestion);
 
+router.post('/count', service.getQuestionsRemainingCount);
+
+router.post('/totalCount', service.getQuestionsTotalCount);
+
 module.exports = router;

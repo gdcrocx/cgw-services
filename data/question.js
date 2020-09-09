@@ -175,3 +175,83 @@ exports.nextQuestion = function(req, res) {
         });
     });
 };
+
+exports.getQuestionsRemainingCount = function(req, res) {
+  
+    pool.getConnection(function(err, connection){
+        if (err) {
+            //connection.release();
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
+
+        console.log('Connected as Thread Id: ' + connection.threadId);
+
+        console.log('Attempting to get next question : ' +  req.body.platform + " " + req.body.difficulty + " " + req.body.teamUuid);
+
+        if (req.body.platform == "aws") {
+            connection.query("CALL spGetAwsQuestionsRemainingCount(" + connection.escape(req.body.teamUuid) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        } else if (req.body.platform == "az") {
+            connection.query("CALL spGetAzQuestionsRemainingCount(" + connection.escape(req.body.teamUuid) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        }
+
+        connection.on('error', function(err) {      
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
+        });
+    });
+};
+
+exports.getQuestionsTotalCount = function(req, res) {
+  
+    pool.getConnection(function(err, connection){
+        if (err) {
+            //connection.release();
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
+
+        console.log('Connected as Thread Id: ' + connection.threadId);
+
+        console.log('Attempting to get next question : ' +  req.body.platform);
+
+        if (req.body.platform == "aws") {
+            connection.query("SELECT COUNT(cgw_aws_q_id) AS count FROM tbl_cgw_aws_questions WHERE cgw_aws_q_enabled = 1;", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows);
+                    return res(null, response);
+                }
+            });
+        } else if (req.body.platform == "az") {
+            connection.query("SELECT COUNT(cgw_az_q_id) AS count FROM tbl_cgw_az_questions WHERE cgw_az_q_enabled = 1;", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows);
+                    return res(null, response);
+                }
+            });
+        }
+        
+        connection.on('error', function(err) {      
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
+        });
+    });
+};
