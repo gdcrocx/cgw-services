@@ -255,3 +255,43 @@ exports.getQuestionsTotalCount = function(req, res) {
         });
     });
 };
+
+exports.checkAnswer = function(req, res) {
+  
+    pool.getConnection(function(err, connection){
+        if (err) {
+            //connection.release();
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
+
+        console.log('Connected as Thread Id: ' + connection.threadId);
+
+        console.log('Attempting to check answer : ' +  req.body.cgw_aws_q_id + " " + req.body.user_answer);
+
+        if (req.body.platform == "aws") {
+            connection.query("CALL spCheckAwsAnswer(" + connection.escape(req.body.cgw_aws_q_id) + "," + connection.escape(req.body.user_answer) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {                    
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        } else if (req.body.platform == "az") {
+            connection.query("CALL spCheckAzAnswer(" + connection.escape(req.body.cgw_az_q_id) + "," + connection.escape(req.body.user_answer) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        }
+        
+        connection.on('error', function(err) {      
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
+        });
+    });
+};

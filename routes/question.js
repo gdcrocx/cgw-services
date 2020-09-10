@@ -15,4 +15,6 @@ router.post('/count', service.getQuestionsRemainingCount);
 
 router.post('/totalCount', service.getQuestionsTotalCount);
 
+router.post('/checkAnswer', service.checkAnswer);
+
 module.exports = router;
