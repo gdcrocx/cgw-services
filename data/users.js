@@ -89,9 +89,9 @@ exports.addUserDetails = function(req, res) {
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + ")");
+        console.log("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + "," + connection.escape(req.body.user_platform) + ")");
 
-        connection.query("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + ")", function(err, rows){          
+        connection.query("CALL spAddUserDetails(" + connection.escape(req.body.user_name) + "," + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_pass) + "," + connection.escape(req.body.user_platform) + ")", function(err, rows){          
             connection.release();            
             if(!err) {                                
                 var response = JSON.stringify(rows[0]); 
@@ -187,16 +187,6 @@ exports.verifyUser = function(req,res) {
                 return res(null, response); 
             }           
         });
-
-        /*connection.query("CALL spGetAllUserDetails();", function(err, fields, rows){          
-            connection.release();            
-            if(!err) {                                
-                var response = JSON.stringify(fields) + JSON.stringify(rows[0]); 
-                console.log("Response res - " + " F: " + fields + " R: " + response);
-                //return res(null, response);
-                return response; 
-            } 
-        });*/ 
 
         connection.on('error', function(err) {      
                 var error = {"code" : 503, "status" : "Error connecting to database.. :("};

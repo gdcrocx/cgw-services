@@ -1,10 +1,9 @@
 { 
     "teamUuid": "cgw-uuid1234",
-    "teamId": "Team 1",
     "startTime": "2020-08-20T19:30:33-04:00",
     "totalTime": "1h30m",
-    "currentTime": "2020-08-20T21:00:33-04:00",
-    "quizType": "aws",
+    "endTime": "2020-08-20T21:00:33-04:00",
+    "platform": "aws",
     "questions": [
         {
             "id": 1,
