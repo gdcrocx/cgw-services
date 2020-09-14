@@ -17,4 +17,6 @@ router.post('/login', service.verifyUser);
 
 router.post('/totalScore', service.getTotalScore);
 
+router.post('/saveTimeSnapshot', service.saveCurrentTimeSnapshot);
+
 module.exports = router;

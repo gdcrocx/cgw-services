@@ -224,6 +224,36 @@ exports.getTotalScore = function(req,res) {
     });
 }
 
+exports.saveCurrentTimeSnapshot = function(req,res) {
+
+    pool.getConnection(function(err, connection){
+        if (err) {
+            //connection.release();
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
+
+        console.log('Connected as Thread Id: ' + connection.threadId);
+
+        connection.query("CALL spSaveCurrentTimeSnapshot(" + connection.escape(req.body.user_team_uuid) + "," + connection.escape(req.body.user_time_snapshot) + ");", function(err, rows){          
+            connection.release();            
+            if(!err) {                                
+                var response = JSON.stringify(rows[0]); 
+                //console.log("Response res - " + response);
+                return res(null, response); 
+            }           
+        });
+
+        connection.on('error', function(err) {      
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
+        });
+    });
+}
+
+
 // exports.getUserDetailsByUserType = function(req, res) {
 
 //     console.log("Data Request Id: " + req);
