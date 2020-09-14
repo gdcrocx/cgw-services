@@ -15,4 +15,6 @@ router.put('/:userid/:username/:phoneno/:firstname/:lastname/:email/:userpass/:u
 
 router.post('/login', service.verifyUser);
 
+router.post('/totalScore', service.getTotalScore);
+
 module.exports = router;

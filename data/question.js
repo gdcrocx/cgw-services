@@ -269,10 +269,10 @@ exports.checkAnswer = function(req, res) {
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log('Attempting to check answer : ' +  req.body.cgw_aws_q_id + " " + req.body.user_answer);
+        console.log('Attempting to check answer : ' +  req.body.cgw_aws_q_id + " " + req.body.teamUuid + " " + req.body.user_answer + " " + req.body.cgw_q_score);
 
         if (req.body.platform == "aws") {
-            connection.query("CALL spCheckAwsAnswer(" + connection.escape(req.body.cgw_aws_q_id) + "," + connection.escape(req.body.user_answer) + ");", function (err, rows) {
+            connection.query("CALL spCheckAwsAnswer(" + connection.escape(req.body.cgw_aws_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
                 connection.release();
                 if (!err) {                    
                     var response = JSON.stringify(rows[0]);
@@ -280,7 +280,7 @@ exports.checkAnswer = function(req, res) {
                 }
             });
         } else if (req.body.platform == "az") {
-            connection.query("CALL spCheckAzAnswer(" + connection.escape(req.body.cgw_az_q_id) + "," + connection.escape(req.body.user_answer) + ");", function (err, rows) {
+            connection.query("CALL spCheckAzAnswer(" + connection.escape(req.body.cgw_az_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
                 connection.release();
                 if (!err) {
                     var response = JSON.stringify(rows[0]);
