@@ -1,8 +1,8 @@
 //PRODUCTION CONFIGURATION
 {	
     "service": {
-        "url": "3.20.89.105",
-        "port": "8080"
+        "url": "127.0.0.1",
+        "port": "8000"
     },
     "db": {
         "connectionLimit"     : "100", //important
