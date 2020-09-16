@@ -253,6 +253,38 @@ exports.saveCurrentTimeSnapshot = function (req, res) {
     }
 };
 
+exports.getCurrentTimeSnapshot = function (req, res) {
+    console.log("\nUser Service Contacted...");  
+    try {
+        if(typeof req.body.user_team_uuid == 'undefined') {
+            return res.status(400).end();
+        }   
+        console.log("Service Request User Id : " + req.body.user_team_uuid);
+
+        usersRepo.getCurrentTimeSnapshot(req, function (err, result) {            
+            if(err) {
+                console.log("Error: 500, returned " + err);
+                return res.status(500).end();                
+            }
+            if(!result) {
+                console.log("Error: 404, returned " + result);
+                return res.status(404).end();
+            }
+            if(result) {
+                console.log("Status: Success | Status Code: 200 | " + result);
+                return res.status(200).set('Content-Type', 'application/json').send(result).end();
+            }
+        });
+    }
+    catch(err) {
+        console.log("Error 500 - Caught an exception - " + err);
+        return res.status(500).end();
+    }
+    finally {    
+        console.log("users Over and out..");
+    }
+};
+
 // exports.getUserDetailsByUserType = function (req, res) {
 //     console.log("\nUser Service Contacted...");  
 //     try {

@@ -19,4 +19,6 @@ router.post('/totalScore', service.getTotalScore);
 
 router.post('/saveTimeSnapshot', service.saveCurrentTimeSnapshot);
 
+router.post('/getTimeSnapshot', service.getCurrentTimeSnapshot);
+
 module.exports = router;
