@@ -154,8 +154,8 @@ exports.nextQuestion = function(req, res) {
         if (req.body.platform == "aws") {
             connection.query("CALL spGetNextAwsQuestion(" + connection.escape(req.body.difficulty) + "," + connection.escape(req.body.teamUuid) + ");", function (err, rows) {
                 connection.release();
-                if (!err) {
-                    var response = JSON.stringify(rows[0]);
+                if (!err) {                    
+                    var response = JSON.stringify(rows[0]);                    
                     return res(null, response);
                 }
             });
@@ -292,6 +292,37 @@ exports.checkAnswer = function(req, res) {
         connection.on('error', function(err) {      
                 var error = {"code" : 503, "status" : "Error connecting to database.. :("};
                 return error;     
+        });
+    });
+};
+
+exports.skipQuestion = function(req, res) {
+  
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            if (connection) {
+                connection.release();
+            }
+            // var error = { "code": 503, "status": "Error creating connection to database.. " + err };
+            // return res(null, error.status);
+            console.log("Error : " + err);
+            return;
+        }
+        console.log('\nConnected as Thread Id: ' + connection.threadId);
+
+        console.log('Attempting to skip question : ' + req.body.questionId + " " + req.body.teamUuid);
+
+        connection.query("CALL spSkipQuestion(" + connection.escape(req.body.questionId) + "," + connection.escape(req.body.teamUuid) + ");", function (err, rows) {
+            connection.release();
+            if (!err) {
+                var response = JSON.stringify(rows[0]);
+                return res(null, response);
+            }
+        });
+
+        connection.on('error', function (err) {
+            var error = { "code": 503, "status": "Error creating connection to database.. " + err };
+            return res(null, error.status);
         });
     });
 };

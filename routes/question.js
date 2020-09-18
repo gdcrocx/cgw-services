@@ -17,4 +17,6 @@ router.post('/totalCount', service.getQuestionsTotalCount);
 
 router.post('/checkAnswer', service.checkAnswer);
 
+router.post('/skip', service.skipQuestion);
+
 module.exports = router;
