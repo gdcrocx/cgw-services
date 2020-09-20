@@ -10,6 +10,8 @@ var app = express();
 
 //app.use(require('./middleware/client-url'));
 
+app.use(cors());
+
 app.use(bodyParser.json({ type: [ 'json', '+json' ] }));
 
 /*// Add headers

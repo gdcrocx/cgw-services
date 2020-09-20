@@ -1,7 +1,7 @@
 //DEV CONFIGURATION
 {	
     "service": {
-        "url": "172.16.113.167",
+        "url": "172.16.113.168",
         "port": "3000"
     },
     "db": {

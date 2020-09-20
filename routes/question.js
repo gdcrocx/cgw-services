@@ -17,6 +17,8 @@ router.post('/totalCount', service.getQuestionsTotalCount);
 
 router.post('/checkAnswer', service.checkAnswer);
 
+router.post('/checkCspResourceAnswer', service.checkCspResourceAnswer);
+
 router.post('/skip', service.skipQuestion);
 
 module.exports = router;

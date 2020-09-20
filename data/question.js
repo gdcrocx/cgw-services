@@ -296,6 +296,59 @@ exports.checkAnswer = function(req, res) {
     });
 };
 
+exports.checkCspResourceAnswer = function(req, res) {
+  
+    pool.getConnection(function(err, connection){
+        if (err) {
+            //connection.release();
+            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+            //return;
+            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+            return error;
+        } 
+
+        console.log('Connected as Thread Id: ' + connection.threadId);
+
+        console.log('Attempting to check AWS resource answer : ' +  req.body.cgw_aws_q_id + " " + req.body.teamUuid + " " + req.body.user_answer + " " + req.body.cgw_q_score);
+
+        if (req.body.platform == "aws") {
+
+            let cgw_aws_answer = "";
+
+            connection.query("CALL spGetAwsResourceAnswer(" + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.aws_resource) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {                    
+                    var response = JSON.stringify(rows[0]);
+                    cgw_aws_answer = response["_response"];
+                }
+            });
+
+            console.log("AWS Resource Answer - " + cgw_aws_answer);
+
+            connection.query("CALL spCheckAwsResourceAnswer(" + connection.escape(req.body.cgw_aws_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(cgw_aws_answer) + "," +connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {                    
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        } else if (req.body.platform == "az") {
+            connection.query("CALL spCheckAzResourceAnswer(" + connection.escape(req.body.cgw_az_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
+                connection.release();
+                if (!err) {
+                    var response = JSON.stringify(rows[0]);
+                    return res(null, response);
+                }
+            });
+        }
+        
+        connection.on('error', function(err) {      
+                var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+                return error;     
+        });
+    });
+};
+
 exports.skipQuestion = function(req, res) {
   
     pool.getConnection(function (err, connection) {
