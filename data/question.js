@@ -155,7 +155,8 @@ exports.nextQuestion = function(req, res) {
             connection.query("CALL spGetNextAwsQuestion(" + connection.escape(req.body.difficulty) + "," + connection.escape(req.body.teamUuid) + ");", function (err, rows) {
                 connection.release();
                 if (!err) {                    
-                    var response = JSON.stringify(rows[0]);                    
+                    var response = JSON.stringify(rows[0]);      
+                    console.log(JSON.stringify(rows[0]));            
                     return res(null, response);
                 }
             });
@@ -298,7 +299,7 @@ exports.checkAnswer = function(req, res) {
 
 exports.checkCspResourceAnswer = function(req, res) {
     
-    let cgw_answer = "";
+    // var cgw_answer = "";
 
     pool.getConnection(function(err, connection){
         if (err) {
@@ -311,25 +312,40 @@ exports.checkCspResourceAnswer = function(req, res) {
 
         console.log('Connected as Thread Id: ' + connection.threadId);
 
-        console.log('Attempting to check AWS resource answer : ' +  req.body.cgw_q_id + " " + req.body.teamUuid + " " + req.body.user_answer + " " + req.body.cgw_q_score);
+        console.log('Attempting to check CSP resource answer : ' +  req.body.platform + " " + req.body.cgw_q_id + " " + req.body.teamUuid + " " + req.body.user_answer + " " + req.body.cgw_q_score + " " + req.body.csp_resource);
 
-        if (req.body.platform == "aws") {
-
-            connection.query("CALL spGetAwsResourceAnswer(" + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.aws_resource) + ");", function (err, rows) {
-                connection.release();
-                if (!err) {                    
-                    var response = JSON.stringify(rows[0]);
-                    connsole.log(response);
-                    cgw_answer = response["_response"];
+        if (req.body.platform == "aws") {            
+            connection.query("CALL spGetAwsResourceAnswer(" + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.csp_resource) + ");", function (err, rows) {
+                // connection.release();
+                if (!err) {                                       
+                    // var response = JSON.stringify(rows[0]);
+                    var cgw_answer = rows[0][0]["response"];
+                    console.log(cgw_answer);
+                    // return res(null, response["response"]);
+                    connection.query("CALL spCheckResourceAnswer(" + connection.escape(req.body.cgw_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(cgw_answer) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
+                        connection.release();
+                        if (!err) {                    
+                            var response = JSON.stringify(rows[0]);
+                            return res(null, response);
+                        }
+                    });
                 }
             });
         } else if (req.body.platform == "az") {
-
-            connection.query("CALL spGetAzResourceAnswer(" + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.aws_resource) + ");", function (err, rows) {
-                connection.release();
+            connection.query("CALL spGetAzResourceAnswer(" + connection.escape(req.body.teamUuid) + "," + connection.escape(req.body.csp_resource) + ");", function (err, rows) {
+                // connection.release();
                 if (!err) {                    
-                    var response = JSON.stringify(rows[0]);
-                    cgw_answer = response["_response"];
+                    // var response = JSON.stringify(rows[0]);
+                    var cgw_answer = rows[0][0]["response"]; 
+                    console.log(cgw_answer);                   
+                    // return res(null, response["_response"]);
+                    connection.query("CALL spCheckResourceAnswer(" + connection.escape(req.body.cgw_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(cgw_answer) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
+                        connection.release();
+                        if (!err) {                    
+                            var response = JSON.stringify(rows[0]);
+                            return res(null, response);
+                        }
+                    });
                 }
             });
         }
@@ -340,32 +356,32 @@ exports.checkCspResourceAnswer = function(req, res) {
         });
     });
 
-    console.log("AWS Resource Answer - " + cgw_answer);
+    // console.log("CSP Resource Answer - " + cgw_answer);
 
-    pool.getConnection(function(err, connection){
-        if (err) {
-            //connection.release();
-            //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
-            //return;
-            var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
-            return error;
-        } 
+    // pool.getConnection(function(err, connection){
+    //     if (err) {
+    //         //connection.release();
+    //         //res.json({"code" : 503, "status" : "Error creating connection to database.. :("});
+    //         //return;
+    //         var error = { "code": 503, "status": "Error creating connection to database.. :(" + err};
+    //         return error;
+    //     } 
 
-        console.log('Connected as Thread Id: ' + connection.threadId);
+    //     console.log('Connected as Thread Id: ' + connection.threadId);
 
-        connection.query("CALL spCheckResourceAnswer(" + connection.escape(req.body.cgw_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(cgw_answer) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
-            connection.release();
-            if (!err) {                    
-                var response = JSON.stringify(rows[0]);
-                return res(null, response);
-            }
-        });
+    //     connection.query("CALL spCheckResourceAnswer(" + connection.escape(req.body.cgw_q_id) + "," + connection.escape(req.body.teamUuid) + "," + connection.escape(cgw_answer) + "," + connection.escape(req.body.user_answer) + "," + connection.escape(req.body.cgw_q_score) + ");", function (err, rows) {
+    //         connection.release();
+    //         if (!err) {                    
+    //             var response = JSON.stringify(rows[0]);
+    //             return res(null, response);
+    //         }
+    //     });
 
-        connection.on('error', function(err) {      
-            var error = {"code" : 503, "status" : "Error connecting to database.. :("};
-            return error;     
-        });
-    });
+    //     connection.on('error', function(err) {      
+    //         var error = {"code" : 503, "status" : "Error connecting to database.. :("};
+    //         return error;     
+    //     });
+    // });
 };
 
 exports.skipQuestion = function(req, res) {
